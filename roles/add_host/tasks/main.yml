@@ -1,0 +1,35 @@
+- name: Place Topology script on host
+  synchronize:
+    src: topology
+    dest: /home/alinga119/
+    rsync_path: /usr/bin/rsync
+    recursive: yes
+
+- name: Determine RackID
+  shell: "/home/alinga119/topology/topology.py {{ hostname }}"
+  register: rack_id
+
+- name: Set Fact RackID
+  set_fact:
+    rack: "{{ rack_id.stdout }}"
+
+- name: Create CM_API script to add host
+  template:
+    src: trial.py
+    dest: /home/alinga119/trial.py
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Execute above CM_API Script
+  command: python /home/alinga119/trial.py
+
+- name: Delete script after execution
+  file:
+    path: /home/alinga119/trial.py
+    state: absent
+
+- name: Delete topology files after executing the script
+  file:
+    path: /home/alinga119/trial.py
+    state: absent
