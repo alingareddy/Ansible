@@ -1,0 +1,28 @@
+
+    - name: Decomissioning "{{decomhost}}" using CM API
+      uri:
+        url: "http://{{CMhost}}:{{CMport}}/api/v11/cm/commands/hostsDecommission"
+        method: POST
+        user: "{{username}}"
+        password: "{{password}}"
+        body_format: json
+        headers:
+          Content-Type: application/json
+        body: '{"items": ["{{ decomhost }}"] }'
+      register: commandID
+
+    - name: Check Decommission Progress of "{{decomhost}}"
+      uri:
+        url: "http://{{CMhost}}:{{CMport}}/api/v11/commands/{{commandID.json.id}}"
+        method: GET
+        user: "{{username}}"
+        password: "{{password}}"
+        body_format: json
+      register: decom_status
+      until: "{{decom_status.json.active}} == false"
+      retries: 30
+      delay: 120
+
+    - name: Verify Decommission Status of "{{decomhost}}"
+      debug:
+        msg: "{{decom_status.json.resultMessage}}"
