@@ -1,0 +1,3 @@
+username: alinga119
+password: x$#@@%^&
+decomhost: "{{ ansible_fqdn }}"
