@@ -1,0 +1,4 @@
+---
+cm_version: "5.13.1"
+CMhost: "<clouderamanager_host>"
+CMport: "7180"
