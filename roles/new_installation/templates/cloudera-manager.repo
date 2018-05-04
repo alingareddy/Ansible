@@ -1,0 +1,4 @@
+[cloudera-manager]
+name = Cloudera Manager, Version {{cm_version}}
+baseurl = http://<clouderamanager_host>/cm_{{cm_version}}_el{{ansible_distribution_major_version}}/cm/{{cm_version}}
+gpgcheck = 0
