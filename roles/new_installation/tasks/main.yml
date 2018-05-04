@@ -1,0 +1,77 @@
+      - name: Set authorized key from file
+        authorized_key:
+           user: root
+           path: /root/.ssh/authorized_keys
+           state: present
+           key: "{{ lookup('file', './files/id_rsa_root.pub') }}"
+
+      - name: Here we are printing Mounts, Devices and Filesystem
+        debug:
+           msg: "{{item.device}} is mounted as {{item.mount}} using {{item.fstype}}"
+        with_items:
+          - "{{directories}}"
+
+      - name: delete old Java Binaries
+        file:
+          state: absent
+          path: "/home/alinga119/jdk1.8.0_91"
+
+      - name: Copy Java Binaries to Host
+        synchronize:
+          src: /home/alinga119/Ansible/roles/new_installation/files/jdk1.8.0_91
+          dest: /home/alinga119
+          rsync_path: /usr/bin/rsync
+          recursive: yes
+
+      - name: Set Permissions
+        file:
+          path: /home/alinga119/jdk1.8.0_91
+          owner: root
+          group: root
+          mode: 0755
+          recurse: yes
+
+      - name: Ensures java directory path exists
+        file:
+          path: /usr/java/jdk1.8.0_91
+          state: directory
+
+      - name: Copy Java to /usr/java
+        shell: cp -rf /home/alinga119/jdk1.8.0_91 /usr/java/
+
+
+      - name: Update Java Alternatives
+        alternatives:
+          name: java
+          link: /usr/bin/java
+          path: /usr/java/jdk1.8.0_91/bin/java
+
+      - name: Check OS version
+        fail:
+          msg: "{{ansible_distribution}}:{{ansible_distribution_major_version}} "
+        when: "{{ansible_distribution_major_version}} == '6'"
+
+      - name: Place Repo File
+        template:
+          src: cloudera-manager.repo
+          dest: /etc/yum.repos.d/cloudera-manager.repo
+          owner: root
+          group: root
+          mode: 644
+
+      - name: Install cloudera packages
+        yum:
+          name: cloudera-manager-agent, cloudera-manager-daemons
+          enablerepo: cloudera-manager
+
+      - name: Place config.ini File
+        template:
+          src: config.ini
+          dest: /etc/cloudera-scm-agent/config.ini
+          owner: root
+          group: root
+          mode: 644
+
+      - service:
+          name: cloudera-scm-agent
+          state: started
