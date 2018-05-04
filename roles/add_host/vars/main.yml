@@ -1,0 +1,5 @@
+username: alinga119
+password: x$#@@%^&
+cluster_name: cluster
+template_name: ICEDatanode
+hostname: "{{ ansible_fqdn }}"
