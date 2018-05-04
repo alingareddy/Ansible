@@ -1,3 +1,4 @@
+
     - name: Wait for parcels to be present
       wait_for:
         path: /opt/cloudera/parcels/CDH
@@ -12,14 +13,14 @@
         state: started
 
     - name: Pause a few moments before applying template
-      pause:
+      pause: 
         minutes: 2
 
     - name: Assign HostTemplate
       uri:
         url: "http://{{CMhost}}:{{CMport}}/api/v11/clusters/cluster/hostTemplates/{{template_name}}/commands/applyHostTemplate"
         method: POST
-        user: "{{username}}"
+        user: "{{username}}" 
         password: "{{password}}"
         body_format: json
         headers:

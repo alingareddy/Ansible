@@ -1,0 +1,56 @@
+
+    - name: Recomissioning "{{recomhost}}" using CM API
+      uri:
+        url: "http://{{CMhost}}:{{CMport}}/api/v11/cm/commands/hostsRecommission"
+        method: POST
+        user: alinga119
+        password: "{{password}}"
+        body_format: json
+        headers:
+          Content-Type: application/json
+        body: '{"items": ["{{ recomhost }}"] }'
+      register: commandID
+
+    - name: Check Recommission Progress of "{{recomhost}}"
+      uri:
+        url: "http://{{CMhost}}:{{CMport}}/api/v11/commands/{{commandID.json.id}}"
+        method: GET
+        user: alinga119
+        password: "{{password}}"
+        body_format: json
+      register: recom_status
+      until: "{{recom_status.json.active}} == false"
+      retries: 10
+      delay: 120
+
+    - name: Verify Recommission Status of "{{recomhost}}"
+      debug:
+        msg: "{{recom_status.json.resultMessage}}"
+
+    - name: Starting roles on "{{recomhost}}" using CM API
+      uri:
+        url: "http://{{CMhost}}:{{CMport}}/api/v11/cm/commands/hostsStartRoles"
+        method: POST
+        user: alinga119
+        password: "{{password}}"
+        body_format: json
+        headers:
+          Content-Type: application/json
+        body: '{"items": ["{{ recomhost }}"] }'
+      register: roles_start
+
+    - name: Check Progress of roles on "{{recomhost}}"
+      uri:
+        url: "http://{{CMhost}}:{{CMport}}/api/v11/commands/{{roles_start.json.id}}"
+        method: GET
+        user: alinga119
+        password: "{{password}}"
+        body_format: json
+      register: roles_status
+      until: "{{roles_status.json.active}} == false"
+      retries: 10
+      delay: 120
+
+    - name: Verify Recommission Status of "{{recomhost}}"
+      debug:
+        msg: "{{roles_status.json.resultMessage}}"

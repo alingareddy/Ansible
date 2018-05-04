@@ -65,7 +65,7 @@
         name: cloudera-scm-agent
         state: stopped
       become: yes
-
+        
 
     - name: Remove Cloudera package
       yum:
@@ -74,7 +74,7 @@
       become: yes
 
     - name: Update webpage that decommissioning of this host has completed
-      lineinfile:
+      lineinfile: 
          dest: /var/www/html/ansible/decom_status.txt
          line: "{{decomhost}} has been decommissioined"
          state: present

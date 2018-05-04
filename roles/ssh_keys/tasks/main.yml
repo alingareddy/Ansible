@@ -1,0 +1,31 @@
+    - name: Remove old rsa key from known_hosts for alinga119
+      known_hosts:
+        path: /home/alinga119/.ssh/known_hosts
+        host: "{{ item }}"
+        state: absent
+      become: yes
+      become_user: alinga119
+      with_items:
+        - "{{decommissioning_hosts}}" 
+
+    - name: Remove old rsa key from known_hosts for root
+      known_hosts:
+        path: /root/.ssh/known_hosts
+        host: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{decommissioning_hosts}}"
+
+    - name: Add new rsa key in known_hosts for alinga119
+      command: bash -lc "ssh-keyscan -t rsa {{ item }} >> /home/alinga119/.ssh/known_hosts"
+      become: yes
+      become_user: alinga119
+      with_items:
+        - "{{decommissioning_hosts}}"
+
+    - name: Add new rsa key in known_hosts for root
+      command: bash -lc "ssh-keyscan -t rsa {{ item }} >> /root/.ssh/known_hosts"
+      with_items:
+        - "{{decommissioning_hosts}}"
+
+      

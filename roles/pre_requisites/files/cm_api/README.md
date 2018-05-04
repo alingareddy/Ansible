@@ -1,14 +1,14 @@
 Cloudera Manager RESTful API Clients
 ====================================
 
-> [Cloudera Manager](http://www.cloudera.com/products-services/tools/) is the market-leading management platform
-> for [CDH](http://www.cloudera.com/hadoop/). As the industry’s first end-to-end
-> management application for Apache Hadoop, Cloudera Manager sets the standard for enterprise deployment by
-> delivering granular visibility into and control over every part of CDH – empowering operators to improve
+> [Cloudera Manager](http://www.cloudera.com/products-services/tools/) is the market-leading management platform 
+> for [CDH](http://www.cloudera.com/hadoop/). As the industry’s first end-to-end 
+> management application for Apache Hadoop, Cloudera Manager sets the standard for enterprise deployment by 
+> delivering granular visibility into and control over every part of CDH – empowering operators to improve 
 > cluster performance, enhance quality of service, increase compliance and reduce administrative costs.
 
-This project contains all the source, examples and documentation
-you need to easily build a [Cloudera Manager](http://www.cloudera.com/products-services/tools/) client in
+This project contains all the source, examples and documentation 
+you need to easily build a [Cloudera Manager](http://www.cloudera.com/products-services/tools/) client in 
 [Java](java) or [Python](python).
 
 All source in this repository is [Apache-Licensed](LICENSE.txt).

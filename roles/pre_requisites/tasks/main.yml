@@ -1,0 +1,38 @@
+    - name: Here we are printing Mounts, Devices and Filesystem
+      debug:
+         msg: "{{item.device}} is mounted as {{item.mount}} using {{item.fstype}}"
+      with_items:
+        - "{{directories}}"
+
+    - name: Check OS version
+      fail:
+        msg: "{{ansible_distribution}}:{{ansible_distribution_major_version}} "
+      when: "{{ansible_distribution_major_version}} == '6'"
+
+    - name: Ensure that /opt is grater than 30GB
+      assert:
+        that: mount.size_total > 30000000000
+        msg: /opt space should be atleast 30GB
+      vars:
+        mount: "{{ ansible_mounts | selectattr('mount','equalto', '/opt') | list | first }}"
+
+    - name: Ensure that swap is greater than 32GB
+      fail:
+         msg: " Swap size is {{ansible_swaptotal_mb}}"
+      when:
+        - ansible_swaptotal_mb != 32767
+    
+    - name: Install python-setup tools
+      package:
+        name: python-setuptools
+        state: present
+
+    - name: Install python Cloudera Manager API Packages
+      synchronize:
+        src: /home/alinga119/Ansible/roles/pre_requisites/files/cm_api
+        dest: /home/alinga119
+        rsync_path: /usr/bin/rsync
+        recursive: yes
+
+    - name: run cm_api setup
+      shell: cd /home/alinga119/cm_api/python; sudo python setup.py install

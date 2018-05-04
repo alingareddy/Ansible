@@ -1,0 +1,19 @@
+---
+directories:
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/01') | list | first }}"
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/02') | list | first }}"
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/03') | list | first }}"
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/04') | list | first }}"
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/05') | list | first }}"
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/06') | list | first }}"
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/07') | list | first }}"
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/08') | list | first }}"
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/09') | list | first }}"
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/10') | list | first }}"
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/11') | list | first }}"
+  - "{{ ansible_mounts | selectattr('mount','equalto','/data/12') | list | first }}"
+
+cm_version: "5.13.1"
+CMhost: "<clouderamanager_host>"
+CMport: "7180"
+hostname: "{{ ansible_fqdn }}"
