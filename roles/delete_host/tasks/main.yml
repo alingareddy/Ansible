@@ -1,0 +1,83 @@
+
+    - name: Get Hostid of "{{decomhost}}"
+      shell: cat /var/lib/cloudera-scm-agent/uuid
+      register: hostid
+
+    - name: Get Roles of host "{{decomhost}}"
+      uri:
+        url: "http://{{CMhost}}:{{CMport}}/api/v17/hosts/{{hostid.stdout}}"
+        method: GET
+        user: "{{username}}"
+        password: "{{password}}"
+        body_format: json
+      register: roles
+
+
+    - name: Deleting roles on "{{decomhost}}"
+      uri:
+        url: "http://{{CMhost}}:{{CMport}}/api/v17/clusters/{{roles.json.roleRefs[item].clusterName}}/services/{{roles.json.roleRefs[item].serviceName}}/roles/{{roles.json.roleRefs[item].roleName}}"
+        method: DELETE
+        user: "{{username}}"
+        password: "{{password}}"
+        body_format: json
+        headers:
+          Content-Type: application/json
+        body: '{"items": ["{{roles.json.roleRefs[item].roleName}}"] }'
+      with_items:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+      ignore_errors: yes
+
+    - name: Deleting the host "{{decomhost}}" from cluster
+      uri:
+        url: "http://{{CMhost}}:{{CMport}}/api/v17/clusters/{{roles.json.clusterRef.clusterName}}/host/{{hostid.stdout}}"
+        method: DELETE
+        user: "{{username}}"
+        password: "{{password}}"
+        body_format: json
+        headers:
+          Content-Type: application/json
+        body: '{"items": ["{{ decomhost }}"] }'
+      ignore_errors: yes
+
+    - name: Deleting the host "{{decomhost}}" from CM
+      uri:
+        url: "http://{{CMhost}}:{{CMport}}/api/v17/hosts/{{hostid.stdout}}"
+        method: DELETE
+        user: "{{username}}"
+        password: "{{password}}"
+        body_format: json
+        headers:
+          Content-Type: application/json
+        body: '{"items": ["{{ decomhost }}"] }'
+      ignore_errors: yes
+
+    - name: Stop Cloudera Agent
+      service:
+        name: cloudera-scm-agent
+        state: stopped
+      become: yes
+
+
+    - name: Remove Cloudera package
+      yum:
+        name: cloudera-manager-agent
+        state: absent
+      become: yes
+
+    - name: Update webpage that decommissioning of this host has completed
+      lineinfile:
+         dest: /var/www/html/ansible/decom_status.txt
+         line: "{{decomhost}} has been decommissioined"
+         state: present
+         insertafter: EOF
+      delegate_to: localhost
+      delegate_facts: True
