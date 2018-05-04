@@ -1,0 +1,50 @@
+---
+
+- hosts: decom_host1 
+  roles:
+     - decommission
+     - delete_host
+- hosts: decom_host1
+  roles:
+     - decommission
+     - delete_host
+- hosts: decom_host3 
+  roles:
+     - decommission
+     - delete_host
+- hosts: decom_host4 
+  roles:
+     - decommission
+     - delete_host
+- hosts: decom_host5 
+  roles:
+     - decommission
+     - delete_host
+- hosts: decom_host6 
+  roles:
+     - decommission
+     - delete_host
+- hosts: decom_host7 
+  roles:
+     - decommission
+     - delete_host
+- hosts: decom_host8 
+  roles:
+     - decommission
+     - delete_host
+- hosts: decom_host9 
+  roles:
+     - decommission
+     - delete_host
+- hosts: decom_host10 
+  roles:
+     - decommission
+     - delete_host
+- hosts: 127.0.0.1
+  tasks:
+    - name: Update webpage that this is end of decommissioning host list
+      lineinfile:
+         dest: /var/www/html/ansible/decom_status.txt
+         line: This is the end of the list
+         state: present
+         insertafter: EOF

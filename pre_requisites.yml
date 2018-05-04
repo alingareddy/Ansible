@@ -1,0 +1,11 @@
+---
+- hosts: 127.0.0.1
+  vars_files:
+    - decommissioning_hosts.yaml
+  connection: local
+  roles:
+     - ssh_keys 
+
+- hosts: recommission 
+  roles:
+     - pre_requisites

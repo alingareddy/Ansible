@@ -1,0 +1,12 @@
+---
+decommissioning_hosts:
+- "decom_host1"
+- "decom_host2"
+- "decom_host3"
+- "decom_host4"
+- "decom_host5"
+- "decom_host6"
+- "decom_host7"
+- "decom_host8"
+- "decom_host9"
+- "decom_host10"

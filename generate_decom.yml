@@ -1,0 +1,22 @@
+- hosts: 127.0.0.1
+  vars_files:
+    - decommissioning_hosts.yaml
+  tasks:
+   - name: Echo ---
+     shell: 'echo -e "---\n" >> /home/alinga119/Ansible/decommission.yml'
+
+   - name: Create the decommission.yml script
+     shell: 
+       'echo -e "- hosts: {{item}}\n  roles:\n     - decommission\n     - delete_host"  >> /home/alinga119/Ansible/decommission.yml'
+     with_items:
+        - "{{ decommissioning_hosts }}"
+
+   - name: Add line in decommission file to add the end of list
+     shell: 
+       'echo -e "- hosts: 127.0.0.1\n  tasks:\n    - name: Update end of decommissioing\n      lineinfile:\n         dest: /var/www/html/ansible/decom_status.txt\n         line: "This is the end of the list"\n         state: present\n         insertafter: EOF" >> /home/alinga119/Ansible/decommission.yml'
+   
+   - name:
+     file:
+       path: /home/alinga119/Ansible/decommission.yml
+       owner: alinga119
+       mode: 0755 

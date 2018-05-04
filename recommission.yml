@@ -1,0 +1,7 @@
+---
+- hosts: recommission
+  roles:
+     - new_installation
+     - add_host
+     - add_roles
+     - recommission
